@@ -22,13 +22,13 @@ export default auth((req) => {
   }
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL("/settings", nextUrl));
+      return NextResponse.redirect(new URL("/settings", nextUrl));
     }
     return;
   }
   if (!isLoggedIn && !isPublicRoute) {
     console.log({ isLoggedIn });
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
   return;
 });

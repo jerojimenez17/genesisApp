@@ -6,8 +6,9 @@ import {
   publicRoutes,
   authRoutes,
 } from "@/routes";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./auth";
+import { redirect } from "next/navigation";
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -20,14 +21,19 @@ export default auth((req) => {
   if (isApiAuthRoute) {
     return;
   }
+  console.log({ isLoggedIn });
+  console.log({ isAuthRoute });
   if (isAuthRoute) {
     if (isLoggedIn) {
+      // return NextResponse.redirect(new URL("/settings", nextUrl).toString());
+      // return NextResponse.rewrite(new URL("/settings", nextUrl).toString());
+
       return Response.redirect(new URL("/settings", nextUrl));
     }
     return;
   }
   if (!isLoggedIn && !isPublicRoute) {
-    console.log({ isLoggedIn });
+    // return NextResponse.rewrite(new URL("/auth/login", nextUrl).toString());
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
   return;

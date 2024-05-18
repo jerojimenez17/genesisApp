@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "GenesisApp",
-  description: "Application for Genesis Paper Store",
+  description: "Entra en nuestra WebApp!",
 };
 
 export default function RootLayout({

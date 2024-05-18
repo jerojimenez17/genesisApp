@@ -19,12 +19,14 @@ export default function Home() {
             font.className
           )}
         >
-          🔐Auth
+          🔐Genesis
         </h1>
-        <p className="text-white text-lg">A simple authentication service</p>
+        <p className="text-white text-lg">
+          Inicia sesion para entrar a nuesto sistema
+        </p>
         <div>
           <LoginButton>
-            <Button variant="secondary">Sign in</Button>
+            <Button variant="secondary">Iniciar Sesion</Button>
           </LoginButton>
         </div>
       </div>

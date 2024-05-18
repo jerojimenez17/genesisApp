@@ -9,14 +9,14 @@ import { getUserByEmail } from "@/data/user";
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validateFields = RegisterSchema.safeParse(values);
   if (!validateFields.success) {
-    return { error: "Invalid Fields" };
+    return { error: "Campos Invalidos" };
   }
   const { email, password, name } = validateFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    return { error: "User already exists" };
+    return { error: "Usuario ya existe" };
   }
   await db.user.create({
     data: {

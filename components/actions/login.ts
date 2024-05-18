@@ -24,7 +24,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       resp = true;
     });
   } catch (err) {
-    return { error: "Contraseña incorrecta else" + (err as AuthError).message };
+    return { error: "Contraseña incorrecta" };
   }
   if (resp) {
     redirect(DEFAULT_LOGIN_REDIRECT);

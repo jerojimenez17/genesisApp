@@ -18,8 +18,10 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { useState, useTransition } from "react";
 import { register } from "../actions/register";
+import { redirect, useRouter } from "next/navigation";
 
 export const RegisterForm = () => {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
@@ -33,8 +35,13 @@ export const RegisterForm = () => {
     setSuccess("");
     startTransition(() => {
       register(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        if (data.error) {
+          setError(data.error);
+        }
+        if (data.success) {
+          setSuccess(data.success);
+          router.push("/auth/login");
+        }
       });
     });
   };

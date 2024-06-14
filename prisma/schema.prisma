@@ -42,3 +42,15 @@ model User {
   image          String?
   accounts       Account[]
 }
+
+model Product {
+  id          String  @id @default(cuid())
+  description String?
+  internCode  String?
+  codeBar     String?
+  cod         String?
+  price       Float?
+  unit        String?
+  amount      Float?
+  category    String?
+}

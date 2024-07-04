@@ -1,11 +1,10 @@
+import ProductDashboad from "@/components/sock/product-dashboard";
 import StockTable from "@/components/sock/stock-table";
+import Modal from "@/components/ui/Modal";
+import { useState } from "react";
 
 const page = () => {
-  return (
-    <div className="flex flex-col h-full w-full items-center overflow-auto">
-      <StockTable />
-    </div>
-  );
+  return <ProductDashboad />;
 };
 
 export default page;

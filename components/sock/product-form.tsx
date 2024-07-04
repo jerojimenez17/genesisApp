@@ -23,11 +23,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { storage } from "@/firebase/config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { FormSuccess } from "../form-success";
+import { v4 } from "uuid";
+import Image from "next/image";
+import { FormError } from "../form-error";
 
 const ProductForm = () => {
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState<string | undefined>("");
-  const [error, setError] = useState<string | undefined>("");
+  const [uploadMessages, setUploadMessage] = useState<string[]>([]);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const [image, setImage] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
@@ -39,23 +47,104 @@ const ProductForm = () => {
       id: "",
       unit: "",
       amount: 0,
-      marca: "",
+      brand: "",
+      category: "",
+      codeBar: "",
+      gain: 0.0,
+      last_update: new Date(),
+      salePrice: 0,
     },
   });
   const onSubmit = (values: z.infer<typeof ProductSchema>) => {
-    setError("");
-    setSuccess("");
-    startTransition(() => {
-      newProduct(values).then((data) => {
-        setError(data?.error);
-        form.reset();
-        // setSuccess(data?.success);
-      });
+    startTransition(async () => {
+      const imageName = image?.name + v4();
+      const storageRef = ref(storage, `/productImage/${imageName}`);
+      if (image) {
+        await uploadBytes(storageRef, image)
+          .then(async () => {
+            const newMessageArray = uploadMessages.concat(
+              "✅La imagen se cargo exitosamente!"
+            );
+            setUploadMessage(newMessageArray);
+          })
+          .catch((err) => {
+            const newErrorMessageArray = errorMessages.concat(
+              "❎ Tu imagen no se cargo. Revisa tu conexion y reintentalo"
+            );
+            setErrorMessages(newErrorMessageArray);
+          });
+        const imageURL = await getDownloadURL(storageRef);
+        values.image = imageURL;
+
+        await newProduct(values)
+          .then((data) => {
+            if (data.error) {
+              const newErrorArray = errorMessages.concat(data.error);
+              setErrorMessages(newErrorArray);
+            }
+            setUploadMessage(uploadMessages.concat("Producto Cargado"));
+            form.reset();
+            // setSuccess(data?.success);
+          })
+          .catch((error) => {
+            const newErrorArray = errorMessages.concat(error.message);
+            setErrorMessages(newErrorArray);
+          });
+      } else {
+        await newProduct(values)
+          .then((data) => {
+            if (data.error) {
+              const newErrorArray = errorMessages.concat(data.error);
+              setErrorMessages(newErrorArray);
+            } else {
+              const newMessageArray = uploadMessages.concat(
+                "✅Producto cargado exitosamente!"
+              );
+              setUploadMessage(newMessageArray);
+            }
+            form.reset();
+            // setSuccess(data?.success);
+          })
+
+          .catch((error) => {
+            const newErrorArray = errorMessages.concat(error.message);
+            setErrorMessages(newErrorArray);
+          });
+      }
     });
   };
+
+  const fileRef = form.register("image");
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Foto</FormLabel>
+                <FormControl>
+                  <Input
+                    {...fileRef}
+                    onChange={(e) => {
+                      if (e.currentTarget.files) {
+                        setImage(e.currentTarget.files[0]);
+                        console.log(e.currentTarget.files[0].name);
+                      }
+                    }}
+                    placeholder=""
+                    type="file"
+                    autoComplete="image"
+                    disabled={isPending}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="space-y-4">
           <FormField
             control={form.control}
@@ -150,6 +239,21 @@ const ProductForm = () => {
         <div className="space-y-4">
           <FormField
             control={form.control}
+            name="gain"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Margen de utilidad</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isPending} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
             name="unit"
             render={({ field }) => (
               <FormItem>
@@ -160,7 +264,7 @@ const ProductForm = () => {
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a verified email to display" />
+                      <SelectValue placeholder="Selecciona la unidad de medida" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -194,6 +298,12 @@ const ProductForm = () => {
           +Agregar Producto
         </Button>
       </form>
+      {uploadMessages.map((message) => (
+        <FormSuccess key={message} message={message} />
+      ))}
+      {errorMessages.map((message) => (
+        <FormError key={message} message={message} />
+      ))}
     </Form>
   );
 };

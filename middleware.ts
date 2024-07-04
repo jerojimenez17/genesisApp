@@ -27,7 +27,7 @@ export default auth((req) => {
     if (isLoggedIn) {
       // return NextResponse.redirect(new URL("/settings", nextUrl).toString());
       // return NextResponse.rewrite(new URL("/settings", nextUrl).toString());
-      // return Response.redirect(new URL("/settings", nextUrl));
+      return Response.redirect(new URL("/settings", nextUrl));
     }
     return;
   }

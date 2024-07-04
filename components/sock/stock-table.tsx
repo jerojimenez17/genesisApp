@@ -37,7 +37,7 @@ const StockTable = () => {
           <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2 w-10">
             Codigo Interno
           </TableHead>
-          <TableHead className="hover:text-gray-800 text-center font-extrabold text-stone-300 text-lg p-2">
+          <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
             Descripcion
           </TableHead>
           <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">

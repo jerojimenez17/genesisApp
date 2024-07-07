@@ -17,7 +17,11 @@ import { FirebaseAdapter } from "@/models/FirebaseAdapter";
 import Product from "@/models/Product";
 import Image from "next/image";
 
-const StockTable = () => {
+interface props {
+  descriptionFilter: string;
+}
+
+const StockTable = ({ descriptionFilter }: props) => {
   const [products, setProducts] = useState<Product[]>();
   useEffect(() => {
     onSnapshot(collection(fbDB, "stock"), (querySnapshot) => {
@@ -58,47 +62,55 @@ const StockTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {products?.map((product) => {
-          return (
-            <TableRow
-              className="text-center hover:text-black hover:bg-gray hover:backdrop-filter hover:backdrop-blur-lg items-center"
-              key={product.cod}
-            >
-              <TableCell className="font-medium w-10">{product.cod}</TableCell>
-              <TableCell className="font-medium w-10">
-                {product.internCode}
-              </TableCell>
-              <TableCell className="font-medium">
-                {product.description}
-              </TableCell>
-              <TableCell className="font-medium">{product.unit}</TableCell>
-              <TableCell className="font-medium">{product.amount}</TableCell>
-              <TableCell className="font-medium">${product.price}</TableCell>
-              <TableCell className="font-medium">
-                ${Number(product.salePrice).toFixed(2)}
-              </TableCell>
-              <TableCell className="items-center align-middle max-h-20">
-                {product.image.includes("https") ? (
-                  <Image
-                    className="rounded-lg "
-                    src={product.image}
-                    alt="Image Not Found"
-                    height={145}
-                    width={85}
-                  />
-                ) : (
-                  <Image
-                    className="rounded-lg"
-                    src={noImgPhoto}
-                    alt="Image Not Found"
-                    height={70}
-                    width={75}
-                  />
-                )}
-              </TableCell>
-            </TableRow>
-          );
-        })}
+        {products
+          ?.filter((product) => {
+            return product.description
+              .toLowerCase()
+              .includes(descriptionFilter);
+          })
+          .map((product) => {
+            return (
+              <TableRow
+                className="text-center hover:text-black hover:bg-gray hover:backdrop-filter hover:backdrop-blur-lg items-center"
+                key={product.cod}
+              >
+                <TableCell className="font-medium w-10">
+                  {product.cod}
+                </TableCell>
+                <TableCell className="font-medium w-10">
+                  {product.internCode}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {product.description}
+                </TableCell>
+                <TableCell className="font-medium">{product.unit}</TableCell>
+                <TableCell className="font-medium">{product.amount}</TableCell>
+                <TableCell className="font-medium">${product.price}</TableCell>
+                <TableCell className="font-medium">
+                  ${Number(product.salePrice).toFixed(2)}
+                </TableCell>
+                <TableCell className="items-center align-middle max-h-20">
+                  {product.image.includes("https") ? (
+                    <Image
+                      className="rounded-lg "
+                      src={product.image}
+                      alt="Image Not Found"
+                      height={145}
+                      width={85}
+                    />
+                  ) : (
+                    <Image
+                      className="rounded-lg"
+                      src={noImgPhoto}
+                      alt="Image Not Found"
+                      height={70}
+                      width={75}
+                    />
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
       </TableBody>
     </Table>
   );

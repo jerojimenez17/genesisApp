@@ -8,6 +8,7 @@ import StockFilterPanel from "./stock-filter-panel";
 
 const ProductDashboad = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [descriptionFilter, setDescriptionFilter] = useState("");
   return (
     <div className="flex flex-col h-full w-full items-center overflow-auto">
       <Modal
@@ -20,8 +21,13 @@ const ProductDashboad = () => {
       >
         <ProductForm />
       </Modal>
-      <StockFilterPanel handleOpenModal={() => setOpenModal(!openModal)} />
-      <StockTable />
+      <StockFilterPanel
+        handleDescriptionFilter={(filter: string) =>
+          setDescriptionFilter(filter)
+        }
+        handleOpenModal={() => setOpenModal(!openModal)}
+      />
+      <StockTable descriptionFilter={descriptionFilter} />
     </div>
   );
 };

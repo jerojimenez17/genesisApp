@@ -13,6 +13,7 @@ export class FirebaseAdapter {
 
   public static fromDocumentData(data: DocumentData, dataId: string): Product {
     let product = new Product();
+    product.id = dataId;
     data.description
       ? (product.description = data.description)
       : (product.description = ""),

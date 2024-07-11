@@ -12,10 +12,11 @@ const StockFilterPanel = ({
   handleDescriptionFilter,
 }: props) => {
   return (
-    <div className="h-28 w-3/4 flex items-center justify-center bg-white bg-opacity-45 shadow rounded-lg mx-auto my-2">
+    <div className="h-28 w-full flex items-center justify-center bg-white bg-opacity-45 shadow rounded-lg mx-auto my-2">
       <Input
-        className="w-1/2 font-bold rounded-full appearance-none border border-blue-400"
+        className="w-1/2 h-10 font-bold rounded-full appearance-none border border-blue-400"
         type="search"
+        placeholder="Buscar..."
         onChange={(e) => {
           if (e.currentTarget.value === "") {
             handleDescriptionFilter("");

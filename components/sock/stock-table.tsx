@@ -18,13 +18,14 @@ import {
   doc,
   onSnapshot,
 } from "firebase/firestore";
-import { fbDB } from "@/firebase/config";
+import { fbDB, storage } from "@/firebase/config";
 import { FirebaseAdapter } from "@/models/FirebaseAdapter";
 import Product from "@/models/Product";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import DeleteButton from "../DeleteButton";
 import Modal from "../ui/Modal";
+import { deleteObject, ref } from "firebase/storage";
 
 interface props {
   descriptionFilter: string;
@@ -155,6 +156,7 @@ const StockTable = ({ descriptionFilter }: props) => {
           }}
           onAcept={async () => {
             console.log(productToEdit);
+            await deleteObject(ref(storage, `${productToEdit.image}`));
             await deleteDoc(doc(fbDB, "stock", productToEdit.id));
             setOpenDeleteModal(false);
           }}

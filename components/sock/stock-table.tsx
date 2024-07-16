@@ -83,9 +83,10 @@ const StockTable = ({ descriptionFilter }: props) => {
         <TableBody>
           {products
             ?.filter((product) => {
-              return product.description
-                .toLowerCase()
-                .includes(descriptionFilter);
+              return (
+                product.description.toLowerCase().includes(descriptionFilter) ||
+                product.cod.toLowerCase().includes(descriptionFilter) //TO DO: Implement switch only cod
+              );
             })
             .map((product) => {
               return (

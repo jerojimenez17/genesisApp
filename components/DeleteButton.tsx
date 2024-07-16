@@ -2,10 +2,11 @@ import React from "react";
 
 interface props {
   onClick: () => void;
+  id?: string;
 }
-const DeleteButton = ({ onClick }: props) => {
+const DeleteButton = ({ onClick, id }: props) => {
   return (
-    <button onClick={onClick}>
+    <button id={id} onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 100"

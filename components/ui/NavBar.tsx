@@ -31,10 +31,12 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
 
 const components: { title: string; href: string; description: string }[] = [
   {
-    title: "🆕Cargar Productos",
+    title: "Cargar Productos",
     href: "/stock/newproduct",
     description: "Agrega nuevos productos a tu stock",
   },
@@ -50,13 +52,16 @@ const componentsPedidos: {
   description: string;
 }[] = [
   {
-    title: "Pedidos",
-    href: "/pedidos",
+    title: "🆕Pedidos",
+    href: "/orders",
     description: "Chequea y administra tus pedidos",
   },
 ];
+interface props {
+  session: Session;
+}
 
-export function NavigationMenuHeader() {
+export function NavigationMenuHeader({ session }: props) {
   return (
     <div className="w-screen flex justify-center shadow align-middle">
       <div className="flex flex-grow">

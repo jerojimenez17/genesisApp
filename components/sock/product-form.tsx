@@ -29,15 +29,20 @@ import { FormSuccess } from "../form-success";
 import { v4 } from "uuid";
 import Image from "next/image";
 import { FormError } from "../form-error";
+import Product from "@/models/Product";
 
-const ProductForm = () => {
+interface props {
+  product?: Product;
+}
+
+const ProductForm = ({ product }: props) => {
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState<string | undefined>("");
   const [uploadMessages, setUploadMessage] = useState<string[]>([]);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [image, setImage] = useState<File | null>(null);
 
-  const form = useForm<z.infer<typeof ProductSchema>>({
+  const emptyForm = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       cod: "",
@@ -53,6 +58,24 @@ const ProductForm = () => {
       gain: 0.0,
       last_update: new Date(),
       salePrice: 0,
+    },
+  });
+  const editForm = useForm<z.infer<typeof ProductSchema>>({
+    resolver: zodResolver(ProductSchema),
+    defaultValues: {
+      cod: product?.cod,
+      description: product?.description,
+      price: product?.price,
+      internCode: product?.internCode,
+      id: product?.id,
+      unit: product?.unit,
+      amount: product?.amount,
+      brand: product?.brand,
+      category: product?.category,
+      codeBar: product?.codeBar,
+      gain: product?.gain,
+      last_update: product?.last_update,
+      salePrice: product?.salePrice,
     },
   });
   const onSubmit = (values: z.infer<typeof ProductSchema>) => {
@@ -114,7 +137,13 @@ const ProductForm = () => {
     });
   };
 
-  const fileRef = form.register("image");
+  const fileRef = emptyForm.register("image");
+  let form: typeof editForm;
+  if (product) {
+    form = editForm;
+  } else {
+    form = emptyForm;
+  }
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">

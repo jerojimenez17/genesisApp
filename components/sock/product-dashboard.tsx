@@ -14,8 +14,6 @@ const ProductDashboad = () => {
       <Modal
         visible={openModal}
         onClose={() => setOpenModal(false)}
-        onAcept={() => setOpenModal(false)}
-        onCancel={() => setOpenModal(false)}
         blockButton={false}
         message={""}
       >

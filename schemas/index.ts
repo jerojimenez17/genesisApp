@@ -1,3 +1,4 @@
+import { PaidStatus, Status } from "@/models/Order";
 import * as z from "zod";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
@@ -54,4 +55,25 @@ export const ProductSchema = z.object({
   // .optional(),
   amount: z.coerce.number(),
   unit: z.string(),
+});
+export const ClientSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, {
+    message: "Nombre es obligatorio",
+  }),
+  cellPhone: z.coerce.number(),
+  address: z.string(),
+  date: z.date(),
+  last_update: z.date(),
+  orders: z.array(
+    z.object({
+      products: z.array(ProductSchema),
+      status: z.enum([Status.pendiente, Status.confirmado, Status.entregado]),
+      paidStatus: z.enum([PaidStatus.pago, PaidStatus.inpago]),
+
+      id: z.string(),
+      date: z.date(),
+    })
+  ),
+  balance: z.coerce.number(),
 });

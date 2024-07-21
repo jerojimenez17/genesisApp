@@ -19,7 +19,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { fbDB, storage } from "@/firebase/config";
-import { FirebaseAdapter } from "@/models/FirebaseAdapter";
+import { ProductFirebaseAdapter } from "@/models/ProductFirebaseAdapter";
 import Product from "@/models/Product";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -40,7 +40,7 @@ const StockTable = ({ descriptionFilter }: props) => {
 
   useEffect(() => {
     onSnapshot(collection(fbDB, "stock"), (querySnapshot) => {
-      const products = FirebaseAdapter.fromDocumentDataArray(
+      const products = ProductFirebaseAdapter.fromDocumentDataArray(
         querySnapshot.docs
       );
       setProducts(products);

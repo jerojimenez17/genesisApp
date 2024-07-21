@@ -18,13 +18,15 @@ import {
   doc,
   onSnapshot,
 } from "firebase/firestore";
-import { fbDB } from "@/firebase/config";
-import { FirebaseAdapter } from "@/models/FirebaseAdapter";
+import { fbDB, storage } from "@/firebase/config";
+import { ProductFirebaseAdapter } from "@/models/ProductFirebaseAdapter";
 import Product from "@/models/Product";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import DeleteButton from "../DeleteButton";
 import Modal from "../ui/Modal";
+import { deleteObject, ref } from "firebase/storage";
+import ProductForm from "./product-form";
 
 interface props {
   descriptionFilter: string;
@@ -34,9 +36,11 @@ const StockTable = ({ descriptionFilter }: props) => {
   const [products, setProducts] = useState<Product[]>();
   const [productToEdit, setProductToEdit] = useState<Product>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+
   useEffect(() => {
     onSnapshot(collection(fbDB, "stock"), (querySnapshot) => {
-      const products = FirebaseAdapter.fromDocumentDataArray(
+      const products = ProductFirebaseAdapter.fromDocumentDataArray(
         querySnapshot.docs
       );
       setProducts(products);
@@ -79,13 +83,21 @@ const StockTable = ({ descriptionFilter }: props) => {
         <TableBody>
           {products
             ?.filter((product) => {
-              return product.description
-                .toLowerCase()
-                .includes(descriptionFilter);
+              return (
+                product.description.toLowerCase().includes(descriptionFilter) ||
+                product.cod.toLowerCase().includes(descriptionFilter) //TO DO: Implement switch only cod
+              );
             })
             .map((product) => {
               return (
                 <TableRow
+                  // onClick={(e) => {
+                  //   console.log(e.currentTarget.id);
+                  //   if (e.currentTarget.id.toLowerCase() !== "deleteButton") {
+                  //     setProductToEdit(product);
+                  //     setOpenEditModal(true);
+                  //   }
+                  // }}
                   className="text-center hover:text-black hover:bg-gray hover:backdrop-filter hover:backdrop-blur-lg items-center"
                   key={product.cod}
                 >
@@ -127,8 +139,9 @@ const StockTable = ({ descriptionFilter }: props) => {
                       />
                     )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="z-50">
                     <DeleteButton
+                      id="deleteButton"
                       onClick={() => {
                         setProductToEdit(product);
                         setOpenDeleteModal(true);
@@ -155,11 +168,21 @@ const StockTable = ({ descriptionFilter }: props) => {
           }}
           onAcept={async () => {
             console.log(productToEdit);
+            await deleteObject(ref(storage, `${productToEdit.image}`));
             await deleteDoc(doc(fbDB, "stock", productToEdit.id));
             setOpenDeleteModal(false);
           }}
           message="Seguro que desea eliminar este producto?"
         />
+      )}
+      {productToEdit && (
+        <Modal
+          onClose={() => setOpenEditModal(false)}
+          visible={openEditModal}
+          blockButton={false}
+        >
+          <ProductForm product={productToEdit} />
+        </Modal>
       )}
     </>
   );

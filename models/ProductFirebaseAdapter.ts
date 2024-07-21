@@ -2,11 +2,11 @@ import { DocumentData } from "firebase/firestore";
 import Product from "./Product";
 import noImg from "@/public/no-image.svg";
 
-export class FirebaseAdapter {
+export class ProductFirebaseAdapter {
   public static fromDocumentDataArray(data: DocumentData[]): Product[] {
     let state: Product[] = [];
     data.forEach((d) => {
-      state.push(FirebaseAdapter.fromDocumentData(d.data(), d.id));
+      state.push(ProductFirebaseAdapter.fromDocumentData(d.data(), d.id));
     });
     return state;
   }

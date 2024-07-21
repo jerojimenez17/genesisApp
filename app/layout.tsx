@@ -19,7 +19,8 @@ export default function RootLayout({
     <html lang="es">
       <body
         className={
-          inter.className + " bg-gradient-to-tr to-blue-400 from-blue-300"
+          inter.className +
+          " bg-gradient-to-tr to-blue-400 from-blue-300 h-screen w-screen overflow-hidden"
         }
       >
         {children}

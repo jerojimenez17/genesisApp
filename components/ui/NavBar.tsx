@@ -31,10 +31,12 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
 
 const components: { title: string; href: string; description: string }[] = [
   {
-    title: "🆕Cargar Productos",
+    title: "Cargar Productos",
     href: "/stock/newproduct",
     description: "Agrega nuevos productos a tu stock",
   },
@@ -50,13 +52,16 @@ const componentsPedidos: {
   description: string;
 }[] = [
   {
-    title: "Pedidos",
-    href: "/pedidos",
+    title: "🆕Pedidos",
+    href: "/orders",
     description: "Chequea y administra tus pedidos",
   },
 ];
+interface props {
+  session: Session;
+}
 
-export function NavigationMenuHeader() {
+export function NavigationMenuHeader({ session }: props) {
   return (
     <div className="w-screen flex justify-center shadow align-middle">
       <div className="flex flex-grow">
@@ -66,25 +71,27 @@ export function NavigationMenuHeader() {
       </div>
       <NavigationMenu className="my-1 p-1">
         <NavigationMenuList>
-          <NavigationMenuItem className="">
-            <NavigationMenuTrigger className="backdrop-filter backdrop-blur-xl bg-gray font-bold text-white hover:bg-gray hover:backdrop-filter hover:backdrop-blur ">
-              Stock
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {components.map((component) => (
-                  <ListItem
-                    className="font-semibold"
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                  >
-                    {component.description}
-                  </ListItem>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+          {session.user.role === "ADMIN" && (
+            <NavigationMenuItem className="">
+              <NavigationMenuTrigger className="backdrop-filter backdrop-blur-xl bg-gray font-bold text-white hover:bg-gray hover:backdrop-filter hover:backdrop-blur ">
+                Stock
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                  {components.map((component) => (
+                    <ListItem
+                      className="font-semibold"
+                      key={component.title}
+                      title={component.title}
+                      href={component.href}
+                    >
+                      {component.description}
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          )}
           <NavigationMenuItem>
             <NavigationMenuTrigger className="bg-gray backdrop-filter backdrop-blur-xl font-bold text-white hover:bg-gray hover:backdrop-filter hover:backdrop-blur-lg">
               Pedidos

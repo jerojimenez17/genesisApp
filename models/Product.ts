@@ -10,7 +10,7 @@ export default class Product {
   gain = 0.0;
   unit = "unidades";
   image = "";
-  amount = 0;
+  amount: number = 0;
   last_update = new Date(Date.now());
   category = "";
 }

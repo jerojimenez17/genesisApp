@@ -8,7 +8,7 @@ interface props {
 const SearchInput = ({ className }: props) => {
   return (
     <Input
-      className={`w-1/2 mx-auto flex ${className} h-10 font-bold rounded-full appearance-none border border-blue-400`}
+      className={`w-1/2 flex ${className} h-10 font-bold rounded-full appearance-none border border-blue-400`}
       type="search"
       placeholder="Buscar..."
       onChange={(e) => {

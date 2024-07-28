@@ -69,7 +69,7 @@ export function NavigationMenuHeader({ session }: props) {
           Genesis
         </span>
       </div>
-      <NavigationMenu className="my-1 p-1">
+      <NavigationMenu className="my-1 p-1 h-10 z-50 w-20">
         <NavigationMenuList>
           {session.user.role === "ADMIN" && (
             <NavigationMenuItem className="">

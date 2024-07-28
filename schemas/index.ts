@@ -53,7 +53,10 @@ export const ProductSchema = z.object({
   //   return ACCEPTED_FILE_TYPES.includes(file.type);
   // }, "El archivo debe ser PDF o PNG")
   // .optional(),
-  amount: z.coerce.number(),
+  amount: z.coerce.number({
+    required_error: "Cantidad es requerido",
+    invalid_type_error: "Debe ser un numero",
+  }),
   unit: z.string(),
 });
 export const ClientSchema = z.object({

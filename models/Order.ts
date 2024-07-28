@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import Product from "@/models/Product";
 
 export enum Status {
   pendiente = "pendiente",
@@ -14,6 +14,7 @@ export default class Order {
   id = "";
   products: Product[] = [];
   date = new Date();
+  total = 0;
   status: Status = Status.pendiente;
   paidStatus: PaidStatus = PaidStatus.inpago;
 }

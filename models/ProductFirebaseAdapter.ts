@@ -18,6 +18,7 @@ export class ProductFirebaseAdapter {
       ? (product.description = data.description)
       : (product.description = ""),
       data.price ? (product.price = data.price) : (product.price = 0),
+      data.amount ? (product.amount = data.amount) : (product.amount = 0),
       data.gain ? (product.gain = data.gain) : (product.gain = 0),
       data.cod ? (product.cod = data.cod) : (product.cod = ""),
       data.internCode

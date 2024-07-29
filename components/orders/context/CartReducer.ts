@@ -32,9 +32,10 @@ export const CartReducer = (state: Order, action: CartAction): Order => {
           ...state,
           products: state.products.map((product) => {
             if (product.id === action.payload.id && product.amount) {
+              const cant = product.amount;
               return {
                 ...product,
-                amount: product.amount++,
+                amount: action.payload.amount + cant,
               };
             }
             return product;
@@ -45,7 +46,6 @@ export const CartReducer = (state: Order, action: CartAction): Order => {
           ...state,
           products: state.products.concat({
             ...action.payload,
-            amount: 1,
           }),
         };
       }

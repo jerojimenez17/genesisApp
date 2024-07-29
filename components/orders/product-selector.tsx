@@ -87,7 +87,10 @@ const ProductSelector = () => {
                 />
                 <Button
                   onClick={() => {
-                    let productToOrder = product;
+                    let productToOrder = new Product();
+                    const { ...resto } = product;
+                    resto.id = "id" + product.id;
+                    productToOrder = resto;
                     productToOrder.amount = unitsToOrder;
                     addItem(productToOrder);
                   }}

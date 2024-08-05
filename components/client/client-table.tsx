@@ -9,8 +9,14 @@ import ProductSelector from "../orders/product-selector";
 import SearchInput from "../SearchInput";
 import ClientButtonModal from "./client-button-modal";
 import { CartContext } from "../orders/context/CartContext";
+import { Session } from "next-auth";
+import Link from "next/link";
 
-const ClientTable = () => {
+interface props {
+  session: Session | null;
+}
+
+const ClientTable = ({ session }: props) => {
   const { cartState } = useContext(CartContext);
   const [clientSelect, setClientSelect] = useState<Client | null>();
   const [clients, setClients] = useState<Client[]>([]);
@@ -23,12 +29,15 @@ const ClientTable = () => {
     });
   }, []);
   return (
-    <div className="h-full w-screnn p-2 mx-auto text-center flex flex-col items-center">
+    <div className=" w-full h-full p-1 mx-auto text-center flex flex-col items-center">
+      <div className=" flex w-full h-10 m-0 text-white flex-col items-start font-bold">
+        <Link href={"/orders"}>🔙 Volver</Link>
+      </div>
       {!clientSelect ? (
         <>
           <h2>Seleccione el cliente o cree uno nuevo</h2>
           <div className="flex m-1">
-            <SearchInput />
+            <SearchInput handleSearch={() => {}} />
             <ClientButtonModal />
           </div>
           {clients?.map((client) => (
@@ -37,7 +46,7 @@ const ClientTable = () => {
                 setClientSelect(client);
                 console.log(client);
               }}
-              className="hover:odd:bg-opacity-40 before:bg-gray-300 h-12 font-semibold text-opacity-60 text-black justify-center flex flex-col odd:bg-white hover:even:bg-emerald-300 hover:even:bg-opacity-40  odd:bg-opacity-30 w-full"
+              className=" m-1 hover:odd:bg-opacity-40 before:bg-gray-300 h-12 font-semibold text-opacity-60 text-black justify-center flex flex-col odd:bg-white hover:even:bg-emerald-300 hover:even:bg-opacity-40  odd:bg-opacity-30 w-full"
               key={client.id}
             >
               {client.name}
@@ -45,7 +54,9 @@ const ClientTable = () => {
           ))}
         </>
       ) : (
-        <ProductSelector />
+        <div className="h-full">
+          <ProductSelector session={session} clientSelected={clientSelect} />
+        </div>
       )}
     </div>
   );

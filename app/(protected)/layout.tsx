@@ -6,7 +6,7 @@ const HomeLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
   if (session)
     return (
-      <div className="h-full flex flex-col max-h-full items-center justify-center">
+      <div className="max-h-screen h-screen flex flex-col items-center justify-center">
         {/*bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-stone-200 to-emerald-400}*/}
         <NavigationMenuHeader session={session} />
         {children}

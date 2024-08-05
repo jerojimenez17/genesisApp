@@ -77,7 +77,7 @@ export function NavigationMenuHeader({ session }: props) {
                 Stock
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ul className="grid w-52 gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                   {components.map((component) => (
                     <ListItem
                       className="font-semibold"
@@ -97,7 +97,7 @@ export function NavigationMenuHeader({ session }: props) {
               Pedidos
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+              <ul className="grid w-52 gap-3 p-4 md:w-[500px] z-50 md:grid-cols-2 lg:w-[600px] ">
                 {componentsPedidos.map((component) => (
                   <ListItem
                     className="font-bold text-lg"

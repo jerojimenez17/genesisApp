@@ -19,7 +19,9 @@ export const RegisterSchema = z.object({
     message: "Nombre es obligatorio",
   }),
 });
-
+export const UnitsSchema = z.object({
+  amount: z.number().min(1, { message: "La cantidad es obligatoria" }),
+});
 export const ProductSchema = z.object({
   id: z.string(),
   cod: z.string().min(1, {

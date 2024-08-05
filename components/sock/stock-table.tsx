@@ -49,7 +49,7 @@ const StockTable = ({ descriptionFilter }: props) => {
   return (
     <>
       <Table className="text-white bar rounded-xl bg-white bg-opacity-20 backdrop-filter shadow my-5 backdrop-blur-3xl w-3/4 mx-auto">
-        <TableHeader className="bg-blue-500">
+        <TableHeader className="bg-blue-500 bg-opacity-80">
           <TableRow className=" hover:bg-gray hover:backdrop-filter hover:backdrop-blur ">
             <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
               Codigo

@@ -31,8 +31,9 @@ export const CartReducer = (state: Order, action: CartAction): Order => {
         return {
           ...state,
           products: state.products.map((product) => {
-            if (product.id === action.payload.id && product.amount) {
+            if (product.id === action.payload.id) {
               const cant = product.amount;
+              console.log(product.amount + cant);
               return {
                 ...product,
                 amount: action.payload.amount + cant,

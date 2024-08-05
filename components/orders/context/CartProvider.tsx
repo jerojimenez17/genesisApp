@@ -6,6 +6,7 @@ import { CartReducer } from "./CartReducer";
 import Product from "../../../models/Product";
 import { types } from "util";
 import Order, { PaidStatus, Status } from "@/models/Order";
+import Client from "@/models/Client";
 
 const INITIAL_STATE: Order = {
   id: "",
@@ -14,6 +15,8 @@ const INITIAL_STATE: Order = {
   total: 0,
   paidStatus: PaidStatus.inpago,
   status: Status.pendiente,
+  client: new Client(),
+  seller: "",
 };
 
 interface props {

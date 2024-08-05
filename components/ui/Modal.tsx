@@ -26,16 +26,16 @@ const Modal = ({
   if (!visible) return null;
   return (
     <div
-      className={`mx-auto my-auto flex-col fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-50 ${className}`}
+      className={`mx-auto w-full my-auto flex-col fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-50 ${className}`}
     >
-      <div className=" flex flex-col h-[90vh]">
+      <div className="w-fit mx-auto flex flex-col h-[90vh]">
         <button
           className="text-white text-xl place-self-end hover:text-pink-300"
           onClick={onClose}
         >
           X
         </button>
-        <div className="bg-sky-200 mx-10 align-middle bg-opacity-50 p-2 rounded w-full h-full overflow-auto flex flex-col">
+        <div className="bg-sky-200 mx-auto align-middle bg-opacity-50 p-2 rounded w-full h-full overflow-auto flex flex-col">
           <div className="m-3 flex flex-col flex-grow mx-auto text-black font-semibold text-lg">
             {message ? message : children}
           </div>

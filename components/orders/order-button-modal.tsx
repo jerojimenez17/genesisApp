@@ -1,3 +1,4 @@
+"use client";
 import { useContext } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { CartContext } from "./context/CartContext";
@@ -15,9 +16,19 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import SaveOrder from "./save-order";
+import Client from "@/models/Client";
+import { auth } from "@/auth";
+import { Session } from "next-auth";
 
-const OrderButtonSheet = () => {
+interface props {
+  client: Client;
+  session: Session | null;
+}
+
+const OrderButtonSheet = ({ client, session }: props) => {
   const { cartState } = useContext(CartContext);
+
   return (
     <Sheet>
       <SheetTrigger className="bg-green-400 hover:bg-emerald-600 p-2 font-semibold bg-opacity-65 rounded-full">
@@ -83,6 +94,10 @@ const OrderButtonSheet = () => {
                   (acc, p) => acc + p.price * p.amount,
                   0
                 )}
+              </TableCell>
+
+              <TableCell>
+                <SaveOrder user={session?.user.email} client={client} />
               </TableCell>
             </TableRow>
           </TableFooter>

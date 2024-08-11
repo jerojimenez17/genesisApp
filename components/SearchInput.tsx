@@ -5,8 +5,9 @@ import { Input } from "./ui/input";
 interface props {
   className?: string;
   handleSearch: (search: string) => void;
+  handleOnChange?: (search: string) => void;
 }
-const SearchInput = ({ className, handleSearch }: props) => {
+const SearchInput = ({ className, handleSearch, handleOnChange }: props) => {
   return (
     <Input
       className={`w-1/2 flex ${className} h-10 font-bold rounded-full appearance-none border border-blue-400`}
@@ -15,6 +16,7 @@ const SearchInput = ({ className, handleSearch }: props) => {
       onChange={(e) => {
         if (e.currentTarget.value === "") {
           // handleDescriptionFilter("");
+          if (handleOnChange) handleOnChange(e.currentTarget.value);
         }
       }}
       onKeyDown={(e) => {

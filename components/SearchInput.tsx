@@ -14,9 +14,9 @@ const SearchInput = ({ className, handleSearch, handleOnChange }: props) => {
       type="search"
       placeholder="Buscar..."
       onChange={(e) => {
-        if (e.currentTarget.value === "") {
-          // handleDescriptionFilter("");
-          if (handleOnChange) handleOnChange(e.currentTarget.value);
+        // handleDescriptionFilter("");
+        if (handleOnChange) {
+          handleOnChange(e.currentTarget.value);
         }
       }}
       onKeyDown={(e) => {

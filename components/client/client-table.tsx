@@ -59,7 +59,7 @@ const ClientTable = ({ session }: props) => {
                   setClientSelect(client);
                   console.log(client);
                 }}
-                className="  hover:odd:bg-opacity-60 before:bg-gray-300 h-12 font-semibold text-opacity-60 text-black justify-center flex flex-col odd:bg-white hover:even:bg-emerald-300 hover:even:bg-opacity-40  odd:bg-opacity-45 w-full"
+                className=" m-1 hover:odd:bg-opacity-40 before:bg-gray-300 h-12 font-semibold text-opacity-60 text-black justify-center flex flex-col odd:bg-white hover:even:bg-emerald-300 hover:even:bg-opacity-40  odd:bg-opacity-30 w-full"
                 key={client.id}
               >
                 {client.name}

@@ -64,6 +64,9 @@ const ProductSelector = ({ clientSelected, session }: props) => {
       <h2>Seleccione Productos</h2>
       <div className="flex flex-row gap-1 mx-auto">
         <SearchInput
+          handleOnChange={(p) => {
+            setProductSearch(p);
+          }}
           handleSearch={(product: string) => {
             setProductSearch(product);
           }}
@@ -77,7 +80,9 @@ const ProductSelector = ({ clientSelected, session }: props) => {
           products &&
           products
             ?.filter((product) => {
-              return product.description.includes(productSearch);
+              return product.description
+                .toLowerCase()
+                .includes(productSearch.toLowerCase());
             })
             .map((product) => (
               <Card

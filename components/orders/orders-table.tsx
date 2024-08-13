@@ -15,6 +15,8 @@ import {
 } from "../ui/table";
 import { SkeletonCard } from "./product-card-skeleton";
 import { OrderSkeleton } from "./order-skeleton";
+import OrderStatusPopover from "@/firebase/orders/changeStatusModal";
+import { changeStatus } from "@/firebase/orders/newOrder";
 
 export const OrdersTable = () => {
   const [orders, setOrders] = useState<Order[]>();
@@ -83,7 +85,16 @@ export const OrdersTable = () => {
                 <TableCell>{order.client.name}</TableCell>
                 <TableCell>{order.seller.split("@")[0]}</TableCell>
                 <TableCell>${order.total}</TableCell>
-                <TableCell>{order.status.toLocaleUpperCase()}</TableCell>
+                <TableCell>
+                  <OrderStatusPopover
+                    initialStatus={order.status}
+                    onChangeStatus={(newStatus) =>
+                      changeStatus(order.id, newStatus)
+                    }
+                  >
+                    {order.status.toLocaleUpperCase()}{" "}
+                  </OrderStatusPopover>
+                </TableCell>
                 <TableCell>{order.paidStatus.toLocaleUpperCase()}</TableCell>
               </TableRow>
             );

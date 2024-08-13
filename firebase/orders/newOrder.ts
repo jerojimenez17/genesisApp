@@ -1,14 +1,20 @@
 import { fbDB } from "../config";
-import { addDoc, collection, doc, runTransaction } from "firebase/firestore";
-import Order from "@/models/Order";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  runTransaction,
+} from "firebase/firestore";
+import Order, { Status } from "@/models/Order";
 
 export const addOrder = async (order: Order) => {
   try {
     for (let i = 0; i < order.products.length; i++) {
       await discountStock(order.products[i].id, order.products[i].amount);
     }
-    const collectionRef = collection(fbDB, "orders");
-    await addDoc(collectionRef, {
+    const collectionOrderRef = collection(fbDB, "orders");
+    await addDoc(collectionOrderRef, {
       id: order.id ? order.id : "",
       products: order.products ? order.products : [],
       client: order.client ? order.client.id : null,
@@ -18,16 +24,75 @@ export const addOrder = async (order: Order) => {
       seller: order.seller,
       paidStatus: order.paidStatus ? order.paidStatus : null,
     });
+    await addOrderToClient(order.client.id, order.id);
   } catch (err) {
     return { error: "Error al guardar Orden" };
   }
 };
+export const confirmOrder = async (orderID: string) => {
+  console.log(orderID);
+  const orderRef = doc(fbDB, "orders", orderID);
+  try {
+    await runTransaction(fbDB, async (transaction) => {
+      const orderDoc = await transaction.get(orderRef);
+      if (!orderDoc.exists()) {
+        throw new Error(`Order dosen't exists`);
+      }
+      updateBalance(orderDoc.data()?.id, orderDoc.data()?.total);
+      transaction.update(orderRef, { status: Status.confirmado });
+    });
+  } catch (err) {
+    throw new Error(`Error${err}`);
+  }
+};
+async function addOrderToClient(
+  clientId: string,
+  orderId: string
+): Promise<void> {
+  const clientRef = doc(fbDB, "clients", clientId);
 
+  try {
+    await runTransaction(fbDB, async (transaction) => {
+      const clientDoc = await transaction.get(clientRef);
+
+      if (!clientDoc.exists()) {
+        throw new Error("Client does not exist!");
+      }
+
+      // Add the orderId to the 'orders' array field in the client document
+      transaction.update(clientRef, {
+        orders: arrayUnion(orderId),
+      });
+    });
+
+    console.log("Order successfully added to client!");
+  } catch (error) {
+    console.error("Transaction failed: ", error);
+  }
+}
+
+async function updateBalance(clientID: string, total: number) {
+  const clientDocID: string = clientID.split("id")[1];
+  const clientRef = doc(fbDB, "clients", clientDocID);
+  try {
+    await runTransaction(fbDB, async (transaction) => {
+      const clientDoc = await transaction.get(clientRef);
+      if (!clientDoc.exists()) {
+        throw new Error("Error: Cliente " + clientID + " no existe");
+      }
+      const clientData = clientDoc.data();
+      const currentBalance = clientData.balance;
+      const newBalance = currentBalance + total;
+      transaction.update(clientRef, { balance: newBalance });
+    });
+  } catch (err) {
+    console.error("Update failed", err);
+  }
+}
 async function discountStock(
   productId: string,
   discountValue: number
 ): Promise<void> {
-  console.log();
   const productRef = doc(fbDB, "stock", productId.split("id")[1]);
 
   try {
@@ -53,5 +118,38 @@ async function discountStock(
     console.log("Transaction successfully committed!");
   } catch (error) {
     console.error("Transaction failed: ", error);
+  }
+}
+
+export async function changeStatus(
+  orderId: string,
+  newStatus: Status
+): Promise<void> {
+  const orderRef = doc(fbDB, "orders", orderId);
+  if (newStatus === Status.confirmado) {
+    confirmOrder(orderId);
+  } else {
+    try {
+      await runTransaction(fbDB, async (transaction) => {
+        const orderDoc = await transaction.get(orderRef);
+
+        if (!orderDoc.exists()) {
+          throw new Error("Order does not exist!");
+        }
+
+        const orderData = orderDoc.data();
+        const currentStatus = orderData?.status;
+
+        if (currentStatus === newStatus) {
+          throw new Error("Order has the same status");
+        }
+
+        transaction.update(orderRef, { status: newStatus });
+      });
+
+      console.log("Transaction successfully committed!");
+    } catch (error) {
+      console.error("Transaction failed: ", error);
+    }
   }
 }

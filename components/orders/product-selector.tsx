@@ -128,7 +128,10 @@ const ProductSelector = ({ clientSelected, session }: props) => {
                           : ""
                       }
                       onChange={(e) => {
-                        if (Number(e.target.value) >= 0) {
+                        if (
+                          Number(e.target.value) >= 0 &&
+                          Number(e.target.value) <= product.amount
+                        ) {
                           setUnitsToOrder({
                             id: product.id,
                             amount: Number(e.target.value),

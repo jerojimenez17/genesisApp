@@ -4,9 +4,11 @@ import {
   arrayUnion,
   collection,
   doc,
+  DocumentReference,
   runTransaction,
 } from "firebase/firestore";
 import Order, { Status } from "@/models/Order";
+import { OrderFirebaseAdapter } from "@/models/OrderFirebaseAdapter";
 
 export const addOrder = async (order: Order) => {
   try {
@@ -14,7 +16,7 @@ export const addOrder = async (order: Order) => {
       await discountStock(order.products[i].id, order.products[i].amount);
     }
     const collectionOrderRef = collection(fbDB, "orders");
-    await addDoc(collectionOrderRef, {
+    const orderRef = await addDoc(collectionOrderRef, {
       id: order.id ? order.id : "",
       products: order.products ? order.products : [],
       client: order.client ? order.client.id : null,
@@ -24,13 +26,12 @@ export const addOrder = async (order: Order) => {
       seller: order.seller,
       paidStatus: order.paidStatus ? order.paidStatus : null,
     });
-    await addOrderToClient(order.client.id, order.id);
+    await addOrderToClient(order.client.id, orderRef);
   } catch (err) {
     return { error: "Error al guardar Orden" };
   }
 };
 export const confirmOrder = async (orderID: string) => {
-  console.log(orderID);
   const orderRef = doc(fbDB, "orders", orderID);
   try {
     await runTransaction(fbDB, async (transaction) => {
@@ -38,7 +39,11 @@ export const confirmOrder = async (orderID: string) => {
       if (!orderDoc.exists()) {
         throw new Error(`Order dosen't exists`);
       }
-      updateBalance(orderDoc.data()?.id, orderDoc.data()?.total);
+      const formatedOrder = OrderFirebaseAdapter.fromDocumentData(
+        orderDoc.data(),
+        orderDoc.id
+      );
+      updateBalance(formatedOrder.client.id, formatedOrder.total);
       transaction.update(orderRef, { status: Status.confirmado });
     });
   } catch (err) {
@@ -47,7 +52,7 @@ export const confirmOrder = async (orderID: string) => {
 };
 async function addOrderToClient(
   clientId: string,
-  orderId: string
+  orderRef: DocumentReference
 ): Promise<void> {
   const clientRef = doc(fbDB, "clients", clientId);
 
@@ -59,20 +64,20 @@ async function addOrderToClient(
         throw new Error("Client does not exist!");
       }
 
-      // Add the orderId to the 'orders' array field in the client document
       transaction.update(clientRef, {
-        orders: arrayUnion(orderId),
+        orders: arrayUnion(orderRef),
       });
     });
 
-    console.log("Order successfully added to client!");
+    console.log("Order successfully added to client!" + orderRef);
   } catch (error) {
     console.error("Transaction failed: ", error);
   }
 }
 
 async function updateBalance(clientID: string, total: number) {
-  const clientDocID: string = clientID.split("id")[1];
+  const clientDocID: string = clientID;
+  console.log(clientDocID);
   const clientRef = doc(fbDB, "clients", clientDocID);
   try {
     await runTransaction(fbDB, async (transaction) => {

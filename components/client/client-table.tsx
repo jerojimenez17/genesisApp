@@ -49,22 +49,24 @@ const ClientTable = ({ session }: props) => {
             />
             <ClientButtonModal />
           </div>
-          {clients
-            ?.filter((client) =>
-              client.name.toLowerCase().includes(searchClient.toLowerCase())
-            )
-            .map((client) => (
-              <div
-                onClick={() => {
-                  setClientSelect(client);
-                  console.log(client);
-                }}
-                className=" m-1 hover:odd:bg-opacity-40 before:bg-gray-300 h-12 font-semibold text-opacity-60 text-black justify-center flex flex-col odd:bg-white hover:even:bg-emerald-300 hover:even:bg-opacity-40  odd:bg-opacity-30 w-full"
-                key={client.id}
-              >
-                {client.name}
-              </div>
-            ))}
+          <div className="flex flex-col h-[82%] overflow-auto w-full p-1 m-1">
+            {clients
+              ?.filter((client) =>
+                client.name.toLowerCase().includes(searchClient.toLowerCase())
+              )
+              .map((client) => (
+                <div
+                  onClick={() => {
+                    setClientSelect(client);
+                    console.log(client);
+                  }}
+                  className=" hover:odd:bg-opacity-40 before:bg-gray-300 h-12 font-semibold text-opacity-60 text-black justify-center flex flex-col odd:bg-white hover:even:bg-emerald-300 hover:even:bg-opacity-40  odd:bg-opacity-30 w-full"
+                  key={client.id}
+                >
+                  {client.name}
+                </div>
+              ))}
+          </div>
         </>
       ) : (
         <div className="h-full">

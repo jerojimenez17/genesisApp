@@ -48,13 +48,11 @@ const ProductForm = ({ product }: props) => {
       cod: "",
       description: "",
       price: 0,
-      internCode: "",
       id: "",
       unit: "",
       amount: 0,
       brand: "",
       category: "",
-      codeBar: "",
       gain: 0.0,
       last_update: new Date(),
       salePrice: 0,
@@ -66,13 +64,11 @@ const ProductForm = ({ product }: props) => {
       cod: product?.cod,
       description: product?.description,
       price: product?.price,
-      internCode: product?.internCode,
       id: product?.id,
       unit: product?.unit,
       amount: product?.amount,
       brand: product?.brand,
       category: product?.category,
-      codeBar: product?.codeBar,
       gain: product?.gain,
       last_update: product?.last_update,
       salePrice: product?.salePrice,
@@ -187,27 +183,6 @@ const ProductForm = ({ product }: props) => {
                     placeholder=""
                     type="text"
                     autoComplete="cod"
-                    disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="internCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Codigo Interno</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder=""
-                    type="text"
-                    autoComplete="internCode"
                     disabled={isPending}
                   />
                 </FormControl>

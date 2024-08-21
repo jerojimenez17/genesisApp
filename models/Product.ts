@@ -2,8 +2,6 @@ export default class Product {
   id = "";
   cod = "";
   description = "";
-  internCode = "";
-  codeBar = "";
   brand = "";
   price = 0.0;
   salePrice = 0.0;

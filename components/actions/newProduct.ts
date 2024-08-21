@@ -21,13 +21,10 @@ export const newProduct = async (values: z.infer<typeof ProductSchema>) => {
     brand: values.brand,
     gain: values.gain,
     salePrice: values.price * (1 + Number(values.gain) * 0.01),
-    codeBar: values.internCode,
     category: "",
     description: values.description,
     unit: values.unit,
     // category: values.category, if in the future add category field
-    internCode: values.internCode,
-
     last_update: new Date(Date.now()),
   };
   console.log(product);
@@ -35,7 +32,7 @@ export const newProduct = async (values: z.infer<typeof ProductSchema>) => {
   if (!validateFields.success) {
     return { error: "Campos Invalidos" };
   }
-  const { id, cod, description, price, unit, internCode } = validateFields.data;
+  const { id, cod, description, price, unit } = validateFields.data;
   console.log(price);
 
   const existingProduct = await getProductByDescription(description);

@@ -24,16 +24,10 @@ export const UnitsSchema = z.object({
 });
 export const ProductSchema = z.object({
   id: z.string(),
-  cod: z.string().min(1, {
-    message: "Codigo es obligatorio",
-  }),
+  cod: z.string(),
   description: z.string().min(1, {
     message: "Descripcion es obligatoria",
   }),
-  internCode: z.string().min(1, {
-    message: "Codigo Interno es obligatorio",
-  }),
-  codeBar: z.string(),
   price: z.coerce.number({
     required_error: "Precio es requerido",
     invalid_type_error: "Debe ser un numero",

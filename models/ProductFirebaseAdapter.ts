@@ -21,18 +21,13 @@ export class ProductFirebaseAdapter {
       data.amount ? (product.amount = data.amount) : (product.amount = 0),
       data.gain ? (product.gain = data.gain) : (product.gain = 0),
       data.cod ? (product.cod = data.cod) : (product.cod = ""),
-      data.internCode
-        ? (product.internCode = data.internCode)
-        : (product.internCode = ""),
       data.last_update
         ? (product.last_update = data.last_update)
         : (product.last_update = new Date()),
       (product.salePrice = data.salePrice);
-    if (data.image.length === 0) {
-      product.image = "NoImg";
-      console.log(product.image);
+    if (data.image.length !== 0) {
+      product.image = data.image;
     }
-    product.image = data.image;
 
     return product;
   }

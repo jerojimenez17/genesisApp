@@ -48,34 +48,31 @@ const StockTable = ({ descriptionFilter }: props) => {
   }, []);
   return (
     <>
-      <Table className="text-white bar rounded-xl bg-white bg-opacity-20 backdrop-filter shadow my-5 backdrop-blur-3xl w-3/4 mx-auto">
+      <Table className="text-white bar rounded-xl bg-white bg-opacity-20 backdrop-filter shadow my-5 backdrop-blur-3xl w-full text-sm md:text-md md:w-3/4 md:mx-auto">
         <TableHeader className="bg-blue-500 bg-opacity-80">
           <TableRow className=" hover:bg-gray hover:backdrop-filter hover:backdrop-blur ">
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2 w-2 sm:w-12">
               Codigo
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2 w-10">
-              Codigo Interno
-            </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2 w-4">
               Descripcion
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2">
               Unidad
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2">
               Cantidad
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2">
               Precio
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2">
               Precio de Venta
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-2">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-2">
               Foto
             </TableHead>
-            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-lg p-1">
+            <TableHead className="hover:text-gray-800 text-center font-extrabold text-white text-sm md:text-md  p-1">
               Acciones
             </TableHead>
           </TableRow>
@@ -101,11 +98,8 @@ const StockTable = ({ descriptionFilter }: props) => {
                   className="text-center hover:text-black hover:bg-gray hover:backdrop-filter hover:backdrop-blur-lg items-center"
                   key={product.cod}
                 >
-                  <TableCell className="font-medium w-10">
+                  <TableCell className="font-medium w-5 md:w-10">
                     {product.cod}
-                  </TableCell>
-                  <TableCell className="font-medium w-10">
-                    {product.internCode}
                   </TableCell>
                   <TableCell className="font-medium">
                     {product.description}
@@ -168,7 +162,10 @@ const StockTable = ({ descriptionFilter }: props) => {
           }}
           onAcept={async () => {
             console.log(productToEdit);
-            await deleteObject(ref(storage, `${productToEdit.image}`));
+            if (productToEdit.image !== "") {
+              const fileRef = ref(storage, `${productToEdit.image}`);
+              await deleteObject(fileRef);
+            }
             await deleteDoc(doc(fbDB, "stock", productToEdit.id));
             setOpenDeleteModal(false);
           }}
